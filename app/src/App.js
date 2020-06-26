@@ -10,8 +10,13 @@ class Student extends Component {
                     <li>Age: {data.age}</li>
                     <li>GPA: {data.gpa}</li>
 
-                    <input type="button" value="Edit"></input>
-                    <input type="button" value="Delete"></input>
+                    <input type="button" value="Edit" onClick={function(e) {
+                        this.props.onEdit();
+                    }.bind(this)}></input>
+
+                    <input type="button" value="Delete" onClick={function (e) {
+                        this.props.onDelete();
+                    }.bind(this)}></input>
                 </div>
             );
         }
@@ -55,6 +60,48 @@ class StudentCreateForm extends Component {
 
                     <p>
                         <input  type="submit"></input>
+                    </p>
+                </form>
+            </div>
+        );
+    }
+}
+
+class StudentEditForm extends Component {
+    render() {
+        return (
+            <div className="StudentEditForm">
+                <h4>Edit</h4>
+                <form
+                    action=""
+                    method="put"
+                    onSubmit={function(e) {
+                        e.preventDefault();
+                        this.props.onSubmit({
+                            name: e.target.name.value, 
+                            age: e.target.age.value,
+                            gpa: e.target.gpa.value,
+                            category: e.target.category.value
+                        });
+                     }.bind(this)}>
+
+                    <p><input type="text" name="name" placeholder="Name" defaultValue={this.props.data.name}></input></p>
+                    <p><input type="number" name="age" placeholder="Age" defaultValue={this.props.data.age}></input></p>
+                    <p><input type="number" step="0.1" name="gpa" placeholder="GPA" defaultValue={this.props.data.gpa}></input></p>
+
+                    <label>Choose a category: </label>
+                    <select name="category" defaultValue={this.props.data.category}>
+                        <option value="unknown">Unknown</option>
+                        <option value="person">Person</option>
+                        <option value="animal">Animal</option>
+                    </select>
+
+                    <p>
+                        <input type="submit" value="Edit"></input>
+                        <input type="button" onClick={function(e) {
+                            e.preventDefault();
+                            this.props.onCancel("read");
+                        }.bind(this)} value="Cancel"></input>
                     </p>
                 </form>
             </div>
@@ -171,7 +218,30 @@ class BBS extends Component {
 
     renderContent = () => {
         if (this.state.mode === "read") {
-            return (<Student mode={this.state.mode} data={this.state.student_list.find(data => data.id === this.state.selected_id)}></Student>);
+            return (<Student data={this.state.student_list.find(data => data.id === this.state.selected_id)}
+                             onEdit={function() {
+                                 this.setState({
+                                     mode: "edit",
+                                 });
+                             }.bind(this)}
+                             onDelete={function() {
+                                 if (window.confirm("Are you sure you want to remove the student?")) {
+                                    var modified_student_list = Array.from(this.state.student_list);
+                                     for (let i = 0; i < modified_student_list.length; i++) {
+                                         if (modified_student_list[i].id === this.state.selected_id) {
+                                             modified_student_list.splice(i, 1);
+                                             break;
+                                         }
+                                     }
+
+                                     this.setState({
+                                         mode: "read",
+                                         student_list: modified_student_list,
+                                         selected_id: 0,
+                                     });
+                                 }
+                             }.bind(this)}>
+                    </Student>);
         } else if (this.state.mode === "create") {
             return (<StudentCreateForm current_category={this.state.category} onSubmit={function(name, age, gpa, category) {
                 this.max_content_id += 1;
@@ -187,6 +257,29 @@ class BBS extends Component {
                     selected_id: this.max_content_id,
                 });
             }.bind(this)}></StudentCreateForm>);
+        } else if (this.state.mode === "edit") {
+            return (<StudentEditForm data={this.state.student_list.find(data => data.id === this.state.selected_id)}
+                                     onCancel={function (mode) {
+                                         this.setState({
+                                             mode: mode,
+                                         });
+                                     }.bind(this)}
+                                     onSubmit={function (newData) {
+                                         var modified_student_list = Array.from(this.state.student_list)
+                                         for (let i = 0; i < modified_student_list.length; i++) {
+                                             if (modified_student_list[i].id === this.state.selected_id) {
+                                                 modified_student_list[i].name = newData.name;
+                                                 modified_student_list[i].age = newData.age;
+                                                 modified_student_list[i].gpa = newData.gpa;
+                                                 modified_student_list[i].category = newData.category;
+                                                 break;
+                                             }
+                                         }
+                                         this.setState({
+                                             mode: "read",
+                                             student_list: modified_student_list,
+                                         });
+                                     }.bind(this)}></StudentEditForm>);
         }
     }
 
