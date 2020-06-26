@@ -39,7 +39,7 @@ class StudentCreateForm extends Component {
                     method="post"
                     onSubmit={function(e) {
                         e.preventDefault();
-                        this.props.onSubmit(e.target.name.value, e.target.age.value, e.target.gpa.value);
+                        this.props.onSubmit(e.target.name.value, e.target.age.value, e.target.gpa.value, e.target.category.value);
                      }.bind(this)}>
 
                     <p><input type="text" name="name" placeholder="Name"></input></p>
@@ -47,7 +47,7 @@ class StudentCreateForm extends Component {
                     <p><input type="number" step="0.1" name="gpa" placeholder="GPA"></input></p>
 
                     <label>Choose a category: </label>
-                    <select name="categories" defaultValue={this.props.current_category.toLocaleLowerCase()}>
+                    <select name="category" defaultValue={this.props.current_category.toLocaleLowerCase()}>
                         <option value="unknown">Unknown</option>
                         <option value="person">Person</option>
                         <option value="animal">Animal</option>
