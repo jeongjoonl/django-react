@@ -1,112 +1,162 @@
 import React, { Component } from 'react';
 import './App.css';
 
+
 class Student extends Component {
-    renderField = (data) => {
-        if (data) {
-            return (
-                <div>
-                    <h4>{data.name}</h4>
-                    <li>Age: {data.age}</li>
-                    <li>GPA: {data.gpa}</li>
+  constructor(props) {
+    super(props);
 
-                    <input type="button" value="Edit" onClick={function(e) {
-                        this.props.onEdit();
-                    }.bind(this)}></input>
+    this.onEdit = this.onEdit.bind(this);
+    this.onDelete = this.onDelete.bind(this);
+  }
 
-                    <input type="button" value="Delete" onClick={function (e) {
-                        this.props.onDelete();
-                    }.bind(this)}></input>
-                </div>
-            );
-        }
-    };
+  onEdit(e) {
+    e.preventDefault();
+    this.props.onEdit();
+  }
 
-    render() {
-        console.log("Student Render");
-        return (
-            <div className="Student">
-                {this.renderField(this.props.data)}
-            </div>
-        );
-    }
+  onDelete(e) {
+    e.preventDefault();
+    this.props.onDelete();
+  }
+
+  render() {
+    console.log("Student Render");
+    return (
+      <div className="Student">
+          <h4>{this.props.data.name}</h4>
+          <li>Age: {this.props.data.age}</li>
+          <li>GPA: {this.props.data.gpa}</li>
+
+          <input
+            type="button"
+            value="Edit"
+            onClick={this.onEdit}
+          />
+
+          <input
+              type="button"
+              value="Delete"
+              onClick={this.onDelete}
+          />
+      </div>
+    );
+  }
 }
 
 class StudentCreateForm extends Component {
-    render() {
-        console.log(this.props.current_category.toLocaleLowerCase())
-        console.log("StudentCreateForm render");
-        return (
-            <div className="CreateStudent">
-                <h1>Add Student</h1>
-                <form
-                    action=""
-                    method="post"
-                    onSubmit={function(e) {
-                        e.preventDefault();
-                        this.props.onSubmit(e.target.name.value, e.target.age.value, e.target.gpa.value, e.target.category.value);
-                     }.bind(this)}>
+  constructor(props) {
+    super(props);
 
-                    <p><input type="text" name="name" placeholder="Name"></input></p>
-                    <p><input type="number" name="age" placeholder="Age"></input></p>
-                    <p><input type="number" step="0.1" name="gpa" placeholder="GPA"></input></p>
+    this.onSubmit = this.onSubmit.bind(this);
+  }
 
-                    <label>Choose a category: </label>
-                    <select name="category" defaultValue={this.props.current_category.toLocaleLowerCase()}>
-                        <option value="unknown">Unknown</option>
-                        <option value="person">Person</option>
-                        <option value="animal">Animal</option>
-                    </select>
+  onSubmit(e) {
+    e.preventDefault();
+    this.props.onSubmit(e.target.name.value, e.target.age.value, e.target.gpa.value, e.target.category.value);
+  }
 
-                    <p>
-                        <input  type="submit"></input>
-                    </p>
-                </form>
-            </div>
-        );
-    }
+  render() {
+    console.log("StudentCreateForm render");
+    return (
+      <div className="CreateStudent">
+        <h1>Add Student</h1>
+        <form
+          action=""
+          method="post"
+          onSubmit={this.onSubmit}
+        >
+          <p>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+            />
+          </p>
+          <p>
+            <input
+              type="number"
+              name="age"
+              placeholder="Age"
+            />
+          </p>
+          <p>
+            <input
+              type="number"
+              name="gpa" 
+              placeholder="GPA"
+              step="0.1" 
+            />
+          </p>
+
+          <label>Choose a category: </label>
+          <select
+            name="category"
+            defaultValue={this.props.current_category.toLocaleLowerCase()}
+          >
+            <option value="unknown">Unknown</option>
+            <option value="person">Person</option>
+            <option value="animal">Animal</option>
+          </select>
+
+          <p>
+            <input
+              type="submit"
+              value="Add"
+            />
+          </p>
+        </form>
+      </div>
+    );
+  }
 }
 
 class StudentEditForm extends Component {
-    render() {
-        return (
-            <div className="StudentEditForm">
-                <h4>Edit</h4>
-                <form
-                    action=""
-                    method="put"
-                    onSubmit={function(e) {
-                        e.preventDefault();
-                        this.props.onSubmit({
-                            name: e.target.name.value, 
-                            age: e.target.age.value,
-                            gpa: e.target.gpa.value,
-                            category: e.target.category.value
-                        });
-                     }.bind(this)}>
+  render() {
+      return (
+          <div className="StudentEditForm">
+              <h4>Edit</h4>
+              <form
+                  action=""
+                  method="put"
+                  onSubmit={function(e) {
+                      e.preventDefault();
+                      this.props.onSubmit(
+                          {
+                              name: e.target.name.value, 
+                              age: e.target.age.value,
+                              gpa: e.target.gpa.value,
+                              category: e.target.category.value
+                          }
+                      );
+                  }.bind(this)}>
 
-                    <p><input type="text" name="name" placeholder="Name" defaultValue={this.props.data.name}></input></p>
-                    <p><input type="number" name="age" placeholder="Age" defaultValue={this.props.data.age}></input></p>
-                    <p><input type="number" step="0.1" name="gpa" placeholder="GPA" defaultValue={this.props.data.gpa}></input></p>
+                  <p><input type="text" name="name" placeholder="Name" defaultValue={this.props.data.name}></input></p>
+                  <p><input type="number" name="age" placeholder="Age" defaultValue={this.props.data.age}></input></p>
+                  <p><input type="number" step="0.1" name="gpa" placeholder="GPA" defaultValue={this.props.data.gpa}></input></p>
 
-                    <label>Choose a category: </label>
-                    <select name="category" defaultValue={this.props.data.category}>
-                        <option value="unknown">Unknown</option>
-                        <option value="person">Person</option>
-                        <option value="animal">Animal</option>
-                    </select>
+                  <label>Choose a category: </label>
+                  <select name="category" defaultValue={this.props.data.category}>
+                      <option value="unknown">Unknown</option>
+                      <option value="person">Person</option>
+                      <option value="animal">Animal</option>
+                  </select>
 
-                    <p>
-                        <input type="submit" value="Edit"></input>
-                        <input type="button" onClick={function(e) {
-                            e.preventDefault();
-                            this.props.onCancel("read");
-                        }.bind(this)} value="Cancel"></input>
-                    </p>
-                </form>
-            </div>
-        );
-    }
+                  <p>
+                      <input type="submit" value="Edit"></input>
+                      <input
+                          type="button"
+                          value="Cancel"
+                          onClick={function(e) {
+                              e.preventDefault();
+                              this.props.onCancel("read");
+                          }.bind(this)}>
+                      </input>
+                  </p>
+              </form>
+          </div>
+      );
+  }
 }
 
 class BBS extends Component {
@@ -187,61 +237,83 @@ class BBS extends Component {
     }
 
     renderDataList = () => {
+        var result = (<li>No Data</li>);
         const data_list = this.state.student_list;
 
-        if (data_list.length === 0) {
-            return (<li>No Data</li>);
+        if (data_list.length !== 0) {
+            if (this.state.category === this.ALL) {
+                result = (data_list.map(data => (
+                    <li key={data.id}>
+                        <a
+                            href={"./" + data.id}
+                            onClick={function(e) {
+                                e.preventDefault();
+                                this.setState({
+                                    mode: "read",
+                                    selected_id: data.id,
+                                });
+                            }.bind(this)}>
+                        {data.name}
+                        </a>
+                    </li>))
+                );
+            } else {
+              return data_list.filter(data => data.category.toLocaleLowerCase() === this.state.category.toLocaleLowerCase())
+                              .map(data => (
+                                  <li key={data.id}><a href={"./" + data.id} onClick={function(e) {
+                                  e.preventDefault();
+                                  this.setState({
+                                      mode: "read",
+                                      selected_id: data.id,
+                              });
+                  }.bind(this)}>{data.name}</a></li>
+              ));
+            }
         }
 
-        if (this.state.category === "Home") {
-            return data_list.map(data => (
-                <li key={data.id}><a href={"./" + data.id} onClick={function(e) {
-                e.preventDefault();
-                this.setState({
-                    mode: "read",
-                    selected_id: data.id,
-                });
-            }.bind(this)}>{data.name}</a></li>));
-        }
-
-        return data_list.filter(data => data.category.toLocaleLowerCase() === this.state.category.toLocaleLowerCase())
-                        .map(data => (
-                            <li key={data.id}><a href={"./" + data.id} onClick={function(e) {
-                            e.preventDefault();
-                            this.setState({
-                                mode: "read",
-                                selected_id: data.id,
-                        });
-            }.bind(this)}>{data.name}</a></li>
-        ));
+        return result;
     };
 
-    renderContent = () => {
-        if (this.state.mode === "read") {
-            return (<Student data={this.state.student_list.find(data => data.id === this.state.selected_id)}
-                             onEdit={function() {
-                                 this.setState({
-                                     mode: "edit",
-                                 });
-                             }.bind(this)}
-                             onDelete={function() {
-                                 if (window.confirm("Are you sure you want to remove the student?")) {
-                                    var modified_student_list = Array.from(this.state.student_list);
-                                     for (let i = 0; i < modified_student_list.length; i++) {
-                                         if (modified_student_list[i].id === this.state.selected_id) {
-                                             modified_student_list.splice(i, 1);
-                                             break;
-                                         }
-                                     }
 
-                                     this.setState({
-                                         mode: "read",
-                                         student_list: modified_student_list,
-                                         selected_id: 0,
-                                     });
-                                 }
-                             }.bind(this)}>
-                    </Student>);
+    getSelectedData() {
+      return this.state.student_list.find(data => (
+        data.id === this.state.selected_id
+      ));
+    }
+
+    renderContent = () => {
+        if (this.state.mode === "read" &&
+            this.state.selected_id !== 0) {
+          return (
+            <Student
+              // data={this.state.student_list.find(data => (
+              //   data.id === this.state.selected_id
+              // ))}
+              data={this.getSelectedData()}
+              onEdit={function() {
+                this.setState({
+                  mode: "edit",
+                });
+              }.bind(this)}
+              onDelete={function() {
+                  if (window.confirm("Are you sure you want to remove the student?")) {
+                    var modified_student_list = Array.from(this.state.student_list);
+                      for (let i = 0; i < modified_student_list.length; i++) {
+                          if (modified_student_list[i].id === this.state.selected_id) {
+                              modified_student_list.splice(i, 1);
+                              break;
+                          }
+                      }
+
+                      this.setState({
+                          mode: "read",
+                          student_list: modified_student_list,
+                          selected_id: 0,
+                      });
+                  }
+              }.bind(this)}>
+            </Student>
+          );
         } else if (this.state.mode === "create") {
             return (<StudentCreateForm current_category={this.state.category} onSubmit={function(name, age, gpa, category) {
                 this.max_content_id += 1;
@@ -289,32 +361,44 @@ class BBS extends Component {
             <div className="BBS">
                 <nav>
                     <ul>
-                        <li><a href="/" onClick={function(e) {
-                            e.preventDefault();
-                            this.setState({
-                                mode: "read",
-                                selected_id: 0,
-                                category: this.ALL,
-                            });
-                        }.bind(this)}>{this.ALL}</a></li>
+                        <li><a
+                            href="/"
+                            onClick={function (e) {
+                                e.preventDefault();
 
-                        <li><a href="/person/" onClick={function(e) {
-                            e.preventDefault();
-                            this.setState({
-                                mode: "read",
-                                selected_id: 0,
-                                category: this.PERSON,
-                            });
-                        }.bind(this)}>{this.PERSON}</a></li>
+                                this.setState({
+                                    mode: "read",
+                                    selected_id: 0,
+                                    category: this.ALL,
+                                });
+                            }.bind(this)}>{this.ALL}
+                        </a></li>
 
-                        <li><a href="/animal/" onClick={function(e) {
-                            e.preventDefault();
-                            this.setState({
-                                mode: "read",
-                                selected_id: 0,
-                                category: this.ANIMAL,
-                            });
-                        }.bind(this)}>{this.ANIMAL}</a></li>
+                        <li><a
+                            href="/person/"
+                            onClick={function (e) {
+                                e.preventDefault();
+
+                                this.setState({
+                                    mode: "read",
+                                    selected_id: 0,
+                                    category: this.PERSON,
+                                });
+                            }.bind(this)}>{this.PERSON}
+                        </a></li>
+
+                        <li><a
+                            href="/animal/"
+                            onClick={function (e) {
+                                e.preventDefault();
+
+                                this.setState({
+                                    mode: "read",
+                                    selected_id: 0,
+                                    category: this.ANIMAL,
+                                });
+                            }.bind(this)}>{this.ANIMAL}
+                        </a></li>
                     </ul>
                 </nav>
 
@@ -326,12 +410,16 @@ class BBS extends Component {
                     </ul>
                 </nav>
 
-                <input type="button" value="Create" onClick={function(e){
-                    e.preventDefault();
-                    this.setState({
-                        mode: "create",
-                    });
-                }.bind(this)}></input>
+                <input
+                    type="button"
+                    value="Create"
+                    onClick={function (e) {
+                        e.preventDefault();
+                        this.setState({
+                            mode: "create",
+                        });
+                    }.bind(this)}>
+                </input>
 
                 {this.renderContent()}
             </div>
@@ -339,16 +427,29 @@ class BBS extends Component {
     }
 }
 
-class App extends Component {
-    render() {
-        console.log("App Render");
-        return (
-            <div className="App">
-                <header><h1>Django-React Demo</h1></header>
-                <BBS></BBS>
-            </div>
-        );
-    }
+function App() {
+  console.log("App Render");
+  return (
+    <div className="App">
+      <header>
+        <h1>Django-React Demo</h1>
+      </header>
+
+      <BBS />
+    </div>
+  );
 }
+
+// class App extends Component {
+//     render() {
+//         console.log("App Render");
+//         return (
+//             <div className="App">
+//                 <header><h1>Django-React Demo</h1></header>
+//                 <BBS></BBS>
+//             </div>
+//         );
+//     }
+// }
 
 export default App;
