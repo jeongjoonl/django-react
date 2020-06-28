@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from "axios";
 
 import CategoryTab from './CategoryTab';
 import Student from './Student';
@@ -7,64 +8,16 @@ import StudentEditForm from './StudentEditForm';
 import StudentList from './StudentList';
 
 function BBS() {
-    let mock_student_data = [
-    {
-      "id": 1,
-      "name": "Alpha",
-      "age": 3,
-      "gpa": 4.0,
-      "category": "person",
-    },
-    {
-      "id": 2,
-      "name": "Beta",
-      "age": 2,
-      "gpa": 3.5,
-      "category": "person",
-    },
-    {
-      "id": 3,
-      "name": "Moon",
-      "age": 11,
-      "gpa": 4.0,
-      "category": "animal",
-    },
-    {
-      "id": 4,
-      "name": "Star",
-      "age": 6,
-      "gpa": 3.5,
-      "category": "animal"
-    },
-    {
-      "id": 5,
-      "name": "Charlie",
-      "age": 1,
-      "gpa": 2.8,
-      "category": "person",
-    },
-    {
-      "id": 6,
-      "name": "Toto",
-      "age": 24,
-      "gpa": 0.3,
-      "category": "animal",
-    },
-    {
-      "id": 7,
-      "name": "Delta",
-      "age": 11,
-      "gpa": 0.8,
-      "category": "person",
-    },
-  ]
-
-  let maxID = 7;
-
   const [mode, setMode] = useState("read");
   const [selectedID, setSelectedID] = useState(0);
   const [category, setCategory] = useState("all");
-  const [studentList, setStudentList] = useState(mock_student_data);
+  const [studentList, setStudentList] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("/student/")
+      .then(response => setStudentList(response.data));
+  }, []);
 
   function onNavitateCatetory(newCategory) {
     setMode("read");
@@ -84,11 +37,17 @@ function BBS() {
   }
 
   function onCreateStudent(newStudent) {
-    maxID += 1;
+    axios
+      .post("/student/", newStudent)
+      .then(response => {
+        if (response.status === 201) {
+          setMode("read");
 
-    newStudent.id = maxID;
+          setStudentList(studentList.concat(response.data));
 
-    setStudentList(studentList.concat(newStudent));
+          setSelectedID(response.data.id);
+        }
+      });
   }
 
   function onEditStudent() {
@@ -96,20 +55,31 @@ function BBS() {
   }
 
   function onSaveEditedStudent(name, age, gpa, category) {
-    let modifiedStudentList = Array.from(studentList);
-
-    for (let i = 0; i < modifiedStudentList.length; i++) {
-      if (modifiedStudentList[i].id === selectedID) {
-        modifiedStudentList[i].name = name;
-        modifiedStudentList[i].age = age;
-        modifiedStudentList[i].gpa = gpa;
-        modifiedStudentList[i].category = category;
-        break;
-      }
+    const editedData = {
+      id: selectedID,
+      name: name,
+      age: age,
+      gpa: gpa,
+      category: category,
     }
 
-    setStudentList(modifiedStudentList);
-    setMode("read");
+    axios
+      .put(`/student/${selectedID}/`, editedData)
+      .then(() => {
+        let modifiedStudentList = Array.from(studentList);
+
+        for (let i = 0; i < modifiedStudentList.length; i++) {
+          if (modifiedStudentList[i].id === editedData.id) {
+            modifiedStudentList[i] = editedData;
+            break;
+          }
+        }
+        setStudentList(modifiedStudentList);
+        setMode("read");
+      })
+      .catch(() => {
+        alert("Couldn't Edit");
+      });
   }
 
   function onCancelEditStudent() {
@@ -117,17 +87,23 @@ function BBS() {
   }
 
   function onDeleteStudent() {
-    let newStudentList = Array.from(studentList);
+    if (window.confirm("Are you sure you want to remove the student from the list?")) {
+      axios
+        .delete(`/student/${selectedID}/`)
+        .then(() => {
+          let newStudentList = Array.from(studentList);
 
-    for (let i = 0; i < newStudentList.length; i++) {
-      if (newStudentList[i].id === selectedID) {
-        newStudentList.splice(i, 1);
-        break;
-      }
+          for (let i = 0; i < newStudentList.length; i++) {
+            if (newStudentList[i].id === selectedID) {
+              newStudentList.splice(i, 1);
+              break;
+            }
+          }
+
+          setSelectedID(0);
+          setStudentList(newStudentList);
+        });
     }
-
-    setSelectedID(0);
-    setStudentList(newStudentList);
   }
 
   function getSelectedStudent() {
