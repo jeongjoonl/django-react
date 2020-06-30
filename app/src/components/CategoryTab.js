@@ -1,44 +1,53 @@
 import React from 'react';
+import {NavLink, Route, Switch} from 'react-router-dom';
 
-function CategoryTab({ onChange }) {
-  function onNavigate(e) {
-    e.preventDefault();
-    onChange(e.target.name);
-  }
-
+function CategoryTab() {
   return (
     <nav>
       <ul>
         <li>
-          <a
-            href="/"
+          <NavLink
+            exact
+            to="/"
             name="all"
-            onClick={onNavigate}
           >
             Home
-          </a>
+          </NavLink>
         </li>
 
         <li>
-          <a
-            href="/person/"
+          <NavLink
+            to="/person/"
             name="person"
-            onClick={onNavigate}
           >
             Person
-          </a>
+          </NavLink>
         </li>
 
         <li>
-          <a
-            href="/animal/"
+          <NavLink
+            to="/animal/"
             name="animal"
-            onClick={onNavigate}
           >
             Animal
-          </a>
+          </NavLink>
         </li>
       </ul>
+
+      <Switch>
+        <Route exact path="/">
+          Home
+        </Route>
+        <Route path="/person/">
+          Person
+        </Route>
+        <Route path="/animal/">
+          Animal
+        </Route>
+        <Route path="/">
+          Not Found
+        </Route>
+      </Switch>
     </nav>
   );
 }

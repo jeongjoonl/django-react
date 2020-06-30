@@ -1,4 +1,5 @@
 import React from 'react';
+import {BrowserRouter} from 'react-router-dom';
 import BBS from './components/BBS';
 
 function App() {
@@ -9,7 +10,7 @@ function App() {
         <h1>Django-React Demo</h1>
       </header>
 
-      <BBS />
+      <BrowserRouter><BBS /></BrowserRouter>
     </div>
   );
 }
