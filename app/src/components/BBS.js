@@ -20,7 +20,7 @@ function BBS() {
       <CategoryTab />
 
       <Switch>
-        <Route exact path="/" render={renderStudentList.bind(this, "")}/>
+        <Route exact path="/" render={renderStudentList.bind(this, "all")}/>
         <Route path="/person/" render={renderStudentList.bind(this, "person")} />
         <Route path="/animal/" render={renderStudentList.bind(this, "animal")} />
         <Route path="/student/create" component={StudentForm} />

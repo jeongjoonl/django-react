@@ -19,14 +19,14 @@ function StudentForm() {
           <input
             type="text"
             placeholder="Name"
-            value={name}
+            defaultValue={name}
           />
         </p>
         <p>
           <input
             type="number"
             placeholder="Age"
-            value={age}
+            defaultValue={age}
           />
         </p>
         <p>
@@ -34,7 +34,7 @@ function StudentForm() {
             type="number"
             placeholder="GPA"
             step="0.01"
-            value={gpa}
+            defaultValue={gpa}
           />
         </p>
 
