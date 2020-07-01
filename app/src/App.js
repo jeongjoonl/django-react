@@ -10,7 +10,9 @@ function App() {
         <h1>Django-React Demo</h1>
       </header>
 
-      <BrowserRouter><BBS /></BrowserRouter>
+      <BrowserRouter>
+        <BBS />
+      </BrowserRouter>
     </div>
   );
 }

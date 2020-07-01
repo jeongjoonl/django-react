@@ -1,5 +1,5 @@
 import React from 'react';
-import {NavLink, Route, Switch} from 'react-router-dom';
+import {Link, NavLink} from 'react-router-dom';
 
 function CategoryTab() {
   return (
@@ -25,29 +25,14 @@ function CategoryTab() {
         </li>
 
         <li>
-          <NavLink
+          <Link
             to="/animal/"
             name="animal"
           >
             Animal
-          </NavLink>
+          </Link>
         </li>
       </ul>
-
-      <Switch>
-        <Route exact path="/">
-          Home
-        </Route>
-        <Route path="/person/">
-          Person
-        </Route>
-        <Route path="/animal/">
-          Animal
-        </Route>
-        <Route path="/">
-          Not Found
-        </Route>
-      </Switch>
     </nav>
   );
 }
