@@ -16,8 +16,8 @@ function BBS() {
         <Route exact path="/" component={StudentList} />
         <Route exact path="/student/create" component={StudentForm} />
         <Route exact path="/student/edit" component={StudentForm} />
+        <Route exact path="/student/:id/" component={Student} />
         <Route exact path="/:category/" component={StudentList} />
-        <Route exact path="/:category/:id/" component={Student} />
         <Route path="/">
           Not Found
         </Route>

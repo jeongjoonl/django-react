@@ -29,7 +29,7 @@ function StudentList(props) {
 
     result = filteredStudentList.map(student => (
       <li key={student.id}>
-        <Link to={"/student/" + student.id}>
+        <Link to={"/student/" + student.id + "/"}>
           {student.name}
         </Link>
       </li>

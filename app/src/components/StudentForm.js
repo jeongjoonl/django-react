@@ -1,17 +1,30 @@
 import React from 'react';
+import axios from 'axios';
 
 function StudentForm(props) {
 
   const data = props.location.state.data;
   let mode = data ? "edit" : "create";
 
-  function onAdd(e) {
-    const form = e.target.for;
-
-  }
-
-  function onSave(e) {
+  function onSubmit(e) {
     const form = e.target.form;
+
+    const newData = {
+      name: form.name.value,
+      age: form.age.value,
+      gpa: form.gpa.value,
+      category: form.category.value,
+    }
+
+    if (mode === "create") {
+      axios
+        .post("/student/", newData)
+        .then(response => props.history.replace("/student/" + response.data.id));
+    } else {
+      axios
+        .put(`/student/${data.id}/`, newData)
+        .then(response => props.history.replace(`/student/${response.data.id}`));
+    }
   }
 
   function onCancel(e) {
@@ -54,7 +67,7 @@ function StudentForm(props) {
         <label>Choose a category: </label>
         <select
           name="category"
-          defaultValue={data ? data.category : undefined}
+          defaultValue={data ? data.category : props.location.state.category}
           required
         >
           <option value="">Select</option>
@@ -63,23 +76,12 @@ function StudentForm(props) {
         </select>
 
         <p>
-          {mode === "create" &&
-            <button
-              type="button"
-              onClick={onAdd}
-            >
-              Add
-            </button>
-          }
-
-          {mode === "edit" &&
-            <button
-              type="button"
-              onClick={onSave}
-            >
-              Save
-            </button>
-          }
+          <button
+            type="button"
+            onClick={onSubmit}
+          >
+            {mode === "create" ? "Add" : "Save"}
+          </button>
 
           <button
             type="button"
