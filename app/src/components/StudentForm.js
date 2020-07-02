@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 
 function StudentForm(props) {
-
   const data = props.location.state.data;
   let mode = data ? "edit" : "create";
 
@@ -27,10 +26,9 @@ function StudentForm(props) {
     }
   }
 
-  function onCancel(e) {
-    e.preventDefault();
-    console.log(props.history);
-    props.history.goBack();
+  function onCancel() {
+    const redirectURL = data ? `/student/${data.id}/` : `/${props.location.state.category}/`;
+    props.history.replace(redirectURL);
   }
 
   return (

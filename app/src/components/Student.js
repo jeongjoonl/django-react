@@ -1,23 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 function Student(props) {
-  const location = useLocation();
   const [student, setStudent] = useState({});
   
   useEffect(() => {
     axios
-      .get(location.pathname)
+      .get(props.location.pathname)
       .then(response => setStudent(response.data));
-  }, [location]);
+  }, [props.location]);
 
   function onEdit() {
     props.history.push("/student/edit", {data: {...student}});
   }
 
   function onDelete() {
+    const previousPageCategory = props.location.state.category;
+    const redirectURL = previousPageCategory === "all" ? "/" : `/${previousPageCategory}/`;
 
+    axios
+      .delete(props.location.pathname)
+      .then(() => props.history.replace(redirectURL));
   }
 
   return (

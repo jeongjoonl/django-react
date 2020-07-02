@@ -29,7 +29,12 @@ function StudentList(props) {
 
     result = filteredStudentList.map(student => (
       <li key={student.id}>
-        <Link to={"/student/" + student.id + "/"}>
+        <Link
+          to={{
+            pathname: `/student/${student.id}/`,
+            state: {category: category}
+          }}
+        >
           {student.name}
         </Link>
       </li>
