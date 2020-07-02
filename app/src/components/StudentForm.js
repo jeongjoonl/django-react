@@ -1,14 +1,18 @@
 import React from 'react';
 
-function StudentForm() {
+function StudentForm(props) {
   let mode="create";
 
   let name="";
   let age="";
   let gpa="";
-  let category="unknown";
+  const category= props.location.state.category;
 
-
+  function onCancel(e) {
+    e.preventDefault();
+    console.log(props.history);
+    props.history.goBack();
+  }
 
   return (
     <div>
@@ -18,6 +22,7 @@ function StudentForm() {
         <p>
           <input
             type="text"
+            name="name"
             placeholder="Name"
             defaultValue={name}
           />
@@ -25,6 +30,7 @@ function StudentForm() {
         <p>
           <input
             type="number"
+            name="age"
             placeholder="Age"
             defaultValue={age}
           />
@@ -32,6 +38,7 @@ function StudentForm() {
         <p>
           <input
             type="number"
+            name="gpa"
             placeholder="GPA"
             step="0.01"
             defaultValue={gpa}
@@ -42,17 +49,17 @@ function StudentForm() {
         <select
           name="category"
           defaultValue={category}
+          required
         >
-          <option value="unknown">Unknown</option>
+          <option value="">Select</option>
           <option value="person">Person</option>
           <option value="animal">Animal</option>
         </select>
 
         <p>
-
           {mode === "create" && <button type="button">Add</button>}
           {mode === "edit" && <button type="button">Save</button>}
-          <button type="button">Cancel</button>
+          <button type="button" onClick={onCancel}>Cancel</button>
         </p>
       </form>
     </div>
