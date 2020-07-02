@@ -1,12 +1,18 @@
 import React from 'react';
 
 function StudentForm(props) {
-  let mode="create";
 
-  let name="";
-  let age="";
-  let gpa="";
-  const category= props.location.state.category;
+  const data = props.location.state.data;
+  let mode = data ? "edit" : "create";
+
+  function onAdd(e) {
+    const form = e.target.for;
+
+  }
+
+  function onSave(e) {
+    const form = e.target.form;
+  }
 
   function onCancel(e) {
     e.preventDefault();
@@ -24,7 +30,7 @@ function StudentForm(props) {
             type="text"
             name="name"
             placeholder="Name"
-            defaultValue={name}
+            defaultValue={data ? data.name : ""}
           />
         </p>
         <p>
@@ -32,7 +38,7 @@ function StudentForm(props) {
             type="number"
             name="age"
             placeholder="Age"
-            defaultValue={age}
+            defaultValue={data ? data.age : undefined}
           />
         </p>
         <p>
@@ -41,14 +47,14 @@ function StudentForm(props) {
             name="gpa"
             placeholder="GPA"
             step="0.01"
-            defaultValue={gpa}
+            defaultValue={data ? data.gpa : undefined}
           />
         </p>
 
-        <label htmlFor="">Choose a Category: </label>
+        <label>Choose a category: </label>
         <select
           name="category"
-          defaultValue={category}
+          defaultValue={data ? data.category : undefined}
           required
         >
           <option value="">Select</option>
@@ -57,9 +63,30 @@ function StudentForm(props) {
         </select>
 
         <p>
-          {mode === "create" && <button type="button">Add</button>}
-          {mode === "edit" && <button type="button">Save</button>}
-          <button type="button" onClick={onCancel}>Cancel</button>
+          {mode === "create" &&
+            <button
+              type="button"
+              onClick={onAdd}
+            >
+              Add
+            </button>
+          }
+
+          {mode === "edit" &&
+            <button
+              type="button"
+              onClick={onSave}
+            >
+              Save
+            </button>
+          }
+
+          <button
+            type="button"
+            onClick={onCancel}
+          >
+            Cancel
+          </button>
         </p>
       </form>
     </div>

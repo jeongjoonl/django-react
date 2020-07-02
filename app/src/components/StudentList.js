@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {Link} from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 function StudentList(props) {
-  const category = props.category;
+  let params = useParams();
+
+  const category = !params.category ? "all" : params.category;
   const[studentList, setStudentList] = useState([]);
 
   useEffect(() => {
@@ -24,10 +26,10 @@ function StudentList(props) {
     if (category !== "all") {
       filteredStudentList = studentList.filter(student => student.category === category);
     }
-    
+
     result = filteredStudentList.map(student => (
       <li key={student.id}>
-        <Link to="/">
+        <Link to={"/student/" + student.id}>
           {student.name}
         </Link>
       </li>
